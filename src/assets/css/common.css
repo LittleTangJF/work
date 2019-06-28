@@ -1,0 +1,316 @@
+/* 动态版面 */
+.w1200 {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.flex1 {
+  flex: 1;
+}
+
+.disF {
+  display: flex;
+}
+
+.minHD {
+  min-height: calc(100vh - 71px);
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.bgFFF {
+  background-color: #fff;
+  /*box-shadow: 0 1px 3px 0px rgba(0,0,0,.1);*/
+}
+
+.mT10 {
+  margin-top: 10px;
+}
+
+.plr10 {
+  padding: 0 10px;
+}
+
+.pB10 {
+  padding-bottom: 10px;
+}
+
+.footer {
+  text-align: center;
+  font-size: 0.75rem;
+  background-color: #eeeeee;
+  line-height: 3;
+  /*margin-top: 20px;*/
+}
+/* 侧边栏 */
+.mainD {
+  /*border: 1px solid #e5e5e5;*/
+  min-height: calc(100% - 130px);
+  /*height: calc(100% - 50px);*/
+  margin-top: 10px;
+  margin-left: 14px;
+}
+
+.mediaMapD {
+  /*top: 94px;*/
+  margin-top: -12px;
+  /*position: fixed;*/
+  /*margin-left: -91px;*/
+  /*width: 80px;*/
+  /*margin-left: -150px;*/
+  width: 130px;
+  text-align: center;
+  /*border: 1px solid #e5e5e5;*/
+  font-size: 0.875rem;
+  background-color: #ffffff;
+}
+  .mediaMapD p {
+    cursor: pointer;
+    padding: 12px 0;
+    transition: all 0.5s;
+    position: relative;
+    color: #777777;
+    text-indent: 1.5rem;
+  }
+
+
+  .mediaMapD .mediaMapDFirst {
+    background: #0b4398;
+    color: #fff;
+    border-radius: 5px 5px 0 0;
+    text-indent: 0;
+  }
+
+  .mediaMapD .active {
+    /*background-color: #0b4398;*/
+    /*color: #ffffff;*/
+    color: #0b4398;
+    font-weight: 600;
+  }
+
+  .mediaMapD p+p:hover {
+    /*background-color: #054399d1;*/
+    color: #054399d1;
+    font-weight: 600;
+  }
+
+.mediaMapD p:nth-child(2) img{
+  width: 30px;
+  margin-top: -2px;
+}
+.mediaMapImg{
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  margin-left: -35px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* 轮播图 */
+.flex210 {
+  flex: 0 0 249px;
+}
+
+.pl10 {
+  padding-left: 10px;
+}
+
+.carouselD .el-carousel__indicators {
+  right: 0;
+  transform: translateX(48px);
+  top: 0;
+}
+
+.carouselD .el-carousel__button {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+/* 文章内容界面 */
+.contMediaRight {
+  width: calc(100% - 130px);
+}
+.pLR20{
+  padding: 0 20px;
+}
+.hotRankD .el-input__inner{
+  width: 80px;
+  font-size: .75rem;
+  border: none;
+}
+.hotRankD .el-select{
+  margin-right: 7px;
+}
+.hotRankD .el-select{
+  margin-right: 7px;
+}
+.hotRankD .w95 .el-input__inner{
+  width: 95px;
+}
+/* 时间选择器 */
+.analMDate.el-date-editor--datetimerange.el-input__inner {
+  width: 250px;
+  background: none;
+}
+.analMDate.el-date-editor .el-range__close-icon {
+  width: 0px;
+}
+.analMDate .el-icon-circle-close:before {
+  content: "";
+}
+.analMDate.el-date-editor .el-range-input {
+  width: 42%;
+  background: none;
+}
+.analMDate.el-date-editor .el-range-separator {
+  width: 12%;
+  line-height: 26px;
+}
+.mT4.analMDate.el-date-editor--datetimerange.el-input__inner{
+  margin-top: 4px;
+}
+.analMDate{
+  margin-top: 6px;
+  float: right;
+  margin-right: 10px;
+}
+
+/* 翻译 */
+.textR{
+  text-align: right;
+}
+.detCentTip.textR i:hover{
+  background-color: #006cba;
+  color: #ffffff;
+  transition: all .3s;
+}
+.detCentTip.textR i{
+  border-radius: 50px;
+  padding: 3px 10px;
+}
+.detCentTip.textR i{
+  cursor: pointer;
+  padding: 7px 10px;
+}
+.mt5{
+  margin-top: 5px ;
+}
+.w130 .el-input__inner{
+  width: 130px;
+}
+.hotRankD .w130{
+  width: 130px;
+}
+.borGarden .el-icon-arrow-up{
+  line-height: 30px;
+}
+.borGarden .el-input__inner{
+  border-radius: 50px;
+  height: 30px;
+  line-height: 30px;
+}
+.borGarden .el-input__inner:hover{
+  border-color: #409EFF;
+  color: #ffffff;
+  background-color: #409EFF;
+}
+/* 相关数据多少条 */
+.navMsg{
+  border-top: 1px solid #e5e5e5;
+  margin: 0 20px;
+  padding: 10px 0 0px;
+}
+.navMsg span,.navMsg em{
+  font-size: .75rem;
+  color: #aaaaaa;
+}
+.navMsg em{
+  color: #ff6262;
+}
+.navMsg .iconfont{
+  font-size: .75rem;
+}
+.searchGD .navMsg{
+    border: none;
+    margin-top: -20px;
+}
+.mR15{
+  margin-right: 15px;
+}
+/* 文章内容 */
+.centMainD{
+  border-bottom: 1px solid #eaeaea;
+  margin: 0 20px 0px;
+  padding: 20px 5px 0px 5px;
+}
+.centMainD:hover{
+  background: #f3f6f8;
+}
+.centMainD .pl160{
+  padding-left: 240px;
+}
+.indexInforD .centMainD{
+  margin: 0 0 10px 0;
+}
+.wbFlex{
+  display: flex;
+  justify-content: space-between;
+}
+.mainTitle{
+  color: #006cba;
+  font-size: .875rem;
+  display: flex;
+  justify-content: space-between;
+  flex-flow: column;
+  margin-bottom: 5px;
+}
+.mainTitle span,.mainCunt span{
+  font-size: .875rem;
+  cursor: pointer;
+  line-height: 1.6;
+  color: #333;
+}
+.mainTitle span.fs1rem{
+  font-size: 1.2rem;
+}
+.mainTitle .curIn,.curIn.sciMsgDBtn  span{
+  cursor: inherit;
+}
+.c333{
+  color: #333333;
+}
+.href:hover{
+  color: #409EFF;
+}
+.subSpancuP span{
+  cursor: pointer;
+}
+.cuP{
+  cursor: pointer;
+}
+.rankStar.fs1rem .el-rate__icon{
+  font-size: 1rem;
+}
+.mainDNav h1.fs1rem{
+  font-size: 1rem;
+}
+.fr{
+  float: right;
+}
+.articleTagsD{
+  word-break: keep-all;
+}
+.articleTagsD span{
+  color: #999;
+  background-color: #f0f0f0;
+  margin-right: 5px;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: .75rem;
+}
+.articleTagsD span:hover{
+  background-color: #e3f3fe;
+  color: #4889f3;
+}
