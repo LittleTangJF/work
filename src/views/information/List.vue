@@ -136,6 +136,10 @@ export default {
 			}
 			_this.axios.get(_this.$API.List	,params).then(res => {
 				console.log(res)
+				let keyW = response.data.keywords
+				_articleList.articleData = response.data
+					_articleList.articleData.keywords = keyW
+						_articleList.articleListClassIs = true
 			})
 		}
 		// 	getPageByConditionFn(orderByField = false) {
