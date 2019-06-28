@@ -6,7 +6,7 @@ const API = {
 	// 轮播图
 	spiderArticle: 'discovery/spiderArticle/getRecommendInformation?size=5&current=1&media=1&type=1',
 	// 列表展示信息
-	List:'/spiderArticle/getRecommendArticleByCondition',
+	List:'discovery/spiderArticle/getRecommendArticleByCondition',
 	
 	// 热门咨询
 	Information:'/discovery/spiderArticle/getRecommendInformation?size=10&current=1&media=1&type=0',

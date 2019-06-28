@@ -129,15 +129,14 @@ export default {
 		getPageByConditionFn() {
 			let _this = this
 			let _articleList = _this.$refs._articleList
-			console.log(_articleList.screen);
 			
 			// _articleList.screen.media = null;
-			// let params = {
-			// 	params: _articleList.screen
-			// }
-			// _this.axios.get(_this.$API.List	,params).then(res => {
-			// 	console.log(res)
-			// })
+			let params = {
+				params: _articleList.screen
+			}
+			_this.axios.get(_this.$API.List	,params).then(res => {
+				console.log(res)
+			})
 		}
 		// 	getPageByConditionFn(orderByField = false) {
 		// 	let _this = this
@@ -171,12 +170,31 @@ export default {
 		// 	_this.$store.state.global.axiosGet(data)
 		// }
 	},
-	mounted() {},
-	created() {
+	mounted() {
 		this.getDataSpider()
 		this.getPageByConditionFn()
 		this.findHotTags()
+		let _this = this
+		let _articleList = _this.$refs._articleList
+		let _global = _this.$store.state.global
+		_articleList.screen.orderByField = 'pubTime'
+		
 	},
+	created() {
+		
+	},
+		beforeRouteLeave(to, from, next) {
+		let position = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
+		sessionStorage.setItem('scrollTop', position)
+		to.meta.keepAliveSerch = false
+		next()
+	},
+	beforeRouteEnter(to, from, next) {
+		to.meta.keepAlive = true
+		let position = sessionStorage.getItem('scrollTop') //返回页面取出来
+		$('body,html').animate({ scrollTop: position }, 10)
+		next()
+	}
 }
 </script>
 <style lang="scss">
