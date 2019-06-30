@@ -40,12 +40,10 @@
 								v-if="$store.state.thematic.topArrTypeSession != 'topic' || $store.state.thematic.userLeftNavSession != 'subscribe'"
 								@change="currentIndex(), $parent.getPageByCondition()"
 								v-model="screen.industry"
-								
 								class="w95"
 								slot="prepend"
 								placeholder="行业"
 							>
-							
 								<el-option label="全部行业" :value="industryInt"></el-option>
 								<el-option v-for="(val, key) in industryArr.industryMap" :key="key" :label="val" :value="key"></el-option>
 							</el-select>
@@ -107,7 +105,7 @@
 				</el-row>
 
 				<!-- 文章数据列表 -->
-				<el-row justify="space-between" v-for="(item, index) in articleData.records" class="centMainD">
+				<el-row justify="space-between" v-for="(item, index) in articleData.records" :key="index" class="centMainD">
 					<!--<el-col>
                     ////{{item.media}}
                 </el-col>-->
@@ -149,7 +147,12 @@
 							</div>
 							<!--视频-->
 							<!--文章目录图-->
-
+							<div
+								:class="item.otherImages && toArr(item.otherImages).length == 1 ? 'mTf110' : ''"
+								v-if="!item.videoSrc && item.otherImages && queryNav.mediaMap[item.media] != '社交'"
+							>
+								<img v-for="(subItem, subIndex) in toArr(item.otherImages)" :src="subItem" alt="" :key="subIndex" class="otherImagesWH mR5" />
+							</div>
 							<!--文章信息-->
 							<div
 								class="w100pre"
@@ -162,11 +165,7 @@
 
 								<el-col :span="12" class="lOperate">
 									<!--todo 订阅专题的文章：显示专题名-->
-									<span
-										class="mR10 c666"
-										v-if="urlName == 'subscribe'"
-										v-html="$options.filters.getTopicNameById(item.topicId, $store.state.thematic.listArr)"
-									></span>
+									<span class="mR10 c666" v-html="$options.filters.getTopicNameById(item.topicId, $store.state.thematic.listArr)"></span>
 
 									<span v-if="item.sfs">{{ item.sfs.readCount || 0 }}</span>
 									<span v-else-if="item.ufs">{{ item.ufs.readCount || 0 }}</span>
@@ -194,12 +193,24 @@
 						:item="item"
 					></articleListClass>
 				</el-row>
+				<el-pagination
+					class="pageD"
+					v-if="!$parent.articleListChild_queryNavNo && articleData.pages > 1"
+					layout="prev, pager, next"
+					@current-change="handleCurrentChange"
+					prev-text="上一页"
+					:current-page="screen.current"
+					next-text="下一页"
+					:total="articleData.total"
+				>
+				</el-pagination>
 			</div>
 		</div>
 	</div>
 </template>
 <script>
-// import filter from "../assets/filter/filter";
+import articleListClass from './articleListClass.vue'
+import filter from '../assets/filter/filter'
 import img0 from '../assets/img/tuij.svg'
 import img1 from '../assets/img/xinw.svg'
 import img2 from '../assets/img/shej.svg'
@@ -270,6 +281,9 @@ let countryListInt = [
 	}
 ]
 export default {
+	components: {
+		articleListClass
+	},
 	data() {
 		return {
 			mediaImg: mediaImgInt,
@@ -343,15 +357,94 @@ export default {
 			articleData: ''
 		}
 	},
+	filters: {
+		// todo 视频传参
+		playerOptionsFn(value) {
+			let playerOptions = {
+				playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+				autoplay: false, //如果true,浏览器准备好时开始回放。
+				muted: false, // 默认情况下将会消除任何音频。
+				loop: false, // 导致视频一结束就重新开始。
+				preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+				language: 'zh-CN',
+				aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+				fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+				sources: [
+					{
+						type: '',
+						src: '' //url地址
+						// src: "http://vali.cp31.ott.cibntv.net/youku/6572d250f8031713ad3395e8f/03000801005C1C6272E6C97003E880233362BF-ABE2-40A2-B257-6ABAD05037AA.mp4?sid=054742831100010001762_00_Aa3449832232eece15a48bea6ab5ac52a&sign=5e37e5238a76d4139ccde7d98001ec79&ctype=50" //url地址
+					}
+				],
+				poster: '', //你的封面地址
+				// width: document.documentElement.clientWidth,
+				notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+				controlBar: {
+					timeDivider: true,
+					durationDisplay: true,
+					remainingTimeDisplay: false,
+					fullscreenToggle: true //全屏按钮
+				}
+			}
+			playerOptions.sources[0].src = `http://cdn.jmrh596.com/${value}`
+			return playerOptions
+		},
+		//todo 高亮关键字
+		numFilter(value, arr) {
+			if (arr && arr.length > 3) {
+				arr.length = 3
+			}
+			if (!value) {
+				return
+			}
+			value = value.replace(/br\/>/g, '').replace(/Бimg:([A-Za-z0-9]+)Б/g, '')
+			arr.forEach((item) => {
+				let index = `<span class="cff6262">${item}</span>`
+				value = value.replace(new RegExp(item, 'g'), index)
+			})
+			return value
+		},
+		//todo 获取目录图片路径
+		otherImagesFn(value) {
+			let _val = value.split('"')
+
+			return _val[1]
+		},
+		// todo 用专题id获取专题名
+		getTopicNameById(topicId, arr) {
+			let index = arr.find((value) => {
+				return value.id == topicId
+			})
+			let html
+			if (index) {
+				html = `[专题：${index.name}]`
+			}
+			return html
+		}
+	},
+
 	methods: {
-		getArticle() {
+		// 获取侧边栏
+		getArticleSelectList() {
 			let _this = this
-			console.log(_this.screen.country);
-			
+			// console.log(_this.screen.country)
+
 			_this.$axios.get(_this.$API.getArticle).then((res) => {
 				// console.log(res.data.data);
 				_this.queryNav = res.data.data
 			})
+		},
+		//todo 文章标签：字符串转数组
+		toArr(value) {
+			if (!value) {
+				return value
+			}
+			let _val = value
+				.replace(/"/g, '')
+				.replace(/\[/g, '')
+				.replace(/\]/g, '')
+				.split(',')
+			return _val
 		},
 		getTopic() {
 			let _this = this
@@ -455,7 +548,7 @@ export default {
 			let _this = this
 			_this.screen.size = val
 			_this.screen.current = 1
-			_this.$parent.getPageByCondition()
+			_this.$parent.getPageByConditionFn()
 		},
 		handleCurrentChange(val) {
 			let _this = this
@@ -465,13 +558,18 @@ export default {
 			}
 			_this.screen.current = val
 			_this.translateActive = ''
-			_this.$parent.getPageByCondition()
+			_this.$parent.getPageByConditionFn()
 			$('body,html').animate({ scrollTop: 0 }, 10)
 		}
 	},
-	created() {
-		this.getArticle()
-		this.getTopic()
+	created() {},
+	mounted() {
+		let _this = this
+		console.log(_this.articleData.records);
+		
+		_this.getArticleSelectList()
+		_this.getTopic()
+		// console.log(_this.articleData)
 	}
 }
 </script>

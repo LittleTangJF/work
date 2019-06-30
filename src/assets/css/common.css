@@ -116,7 +116,23 @@
 .pl10 {
   padding-left: 10px;
 }
-
+.posR{
+  position: relative;
+}
+.carouselImg{
+  display: block;
+  width: 100%;
+  height: 150px;
+}
+.carouselMsg{
+  position: absolute;
+  font-size: .875rem;
+  bottom: 0;
+  background-color: rgba(0,0,0,.4);
+  color: #ffffff;
+  padding: 5px;
+  width: 100%;
+}
 .carouselD .el-carousel__indicators {
   right: 0;
   transform: translateX(48px);
@@ -313,4 +329,110 @@
 .articleTagsD span:hover{
   background-color: #e3f3fe;
   color: #4889f3;
+}
+/* 文章目录图 */
+.otherImagesWH{
+  display: inline-block;
+  width: 230px;
+  height: 120px;
+  background: url("../img/thematicDefault.png") 40% center no-repeat;
+}
+.mR5{
+  margin-right: 5px;
+}
+.mTf110{
+  margin-top: -100px;
+}
+/* 文章信息 */
+.lOperate{
+  font-size: .75rem;
+  color: #b4b4b4;
+}
+.mR10{
+  margin-right: 6px;
+}
+.c666,.c666:visited{
+  color: #666666;
+}
+.c6666ff{
+  color: #6666ff;
+}
+.pl10{
+  padding-left: 10px;
+}
+.rOperate{
+  text-align: right;
+}
+.rOperate span,.rOperate span em{
+  font-size: .75rem;
+  margin-right: 10px;
+  color: #b4b4b4;
+}
+.rOperate span a{
+  font-size: .75rem;
+  cursor: pointer;
+}
+.rOperate{
+  text-align: right;
+}
+.rOperate span{
+  font-size: .75rem;
+  margin-right: 10px;
+}
+.rOperate span a{
+  font-size: .75rem;
+  cursor: pointer;
+}
+/* 下一页 */
+.pageD{
+  text-align: center;
+  margin: 20px 0;
+}
+.pageD .more{
+  /*display: none;*/
+}
+.pageD .more + .number{
+  display: none;
+}
+/* 热门资讯 */
+.mT10{
+  margin-top: 10px;
+}
+.fs1d2{
+  font-size: 1.2rem;
+}
+.mbf10{
+  margin-bottom: -10px;
+}
+.recomInfoD p a{
+  color: #333;
+}
+.recomInfoD{
+  padding-top: 5px;
+}
+.recomInfoD{
+  padding-top: 5px;
+}
+.recomInfoDIndex{
+  display: inline-block;
+  width: 1.5rem;
+}
+.textOver{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.textOver a:hover {
+  color: #409EFF;
+}
+.w217{
+  width: 217px;
+}
+.sciListDSpan .fs875{
+  position: absolute;
+  z-index: 2;
+}
+.fs875{
+  font-size: .875rem;
+  text-decoration: none;
 }

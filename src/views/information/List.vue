@@ -6,7 +6,7 @@
 					<div class="disF">
 						<!-- 中间的acrticle -->
 						<div class="flex1">
-							<articleList ref="_articleList" class="mT0"></articleList>
+							<articleList ref="_articleList" class="mT0" :articleData="articleData"></articleList>
 						</div>
 						<!-- 轮播图 -->
 						<div class="flex210 pl10">
@@ -73,121 +73,111 @@ export default {
 			articleListChild: {
 				detailsPageName: 'informationDetails' //详情页面 路由名
 			},
-			scrollTop: ''
+			scrollTop: '',
+			articleData: []
 		}
 	},
 	components: {
 		articleList
 	},
+	// props:[articleData],
 	// 设置过滤器
-	
+
 	methods: {
 		// 获取轮播图数据
-		getDataSpider() {
+		getRecommendInformation(type, size) {
 			let _this = this
-			// let _recommendInfoSreen = _this.recommendInfoSreen;
-			// {params:{_recommendInfoSreen}}
-			_this.$axios.get(_this.$API.spiderArticle).then((res) => {
-				// console.log(res)
-				_this.recommendInfoArr = res.data.record
+			let _recommendInfoSreen = _this.recommendInfoSreen
+			_recommendInfoSreen.type = type
+			
+			if (size) {
+				_recommendInfoSreen.size = size
+			}
+			let params = {
+				params: _recommendInfoSreen
+			}
+			_this.$axios.get(_this.$API.spiderArticle,params).then((res) => {
+				// console.log(res.data.data.records)
+				
+				_this.recommendInfoArr= res.data.data.records
+				
+			// console.log(_this._recommendInfoSreen);
 			})
 		},
 		// todo 查询用户感兴趣的行业热词 findHotTags
 		findHotTags(orderByField) {
 			let _this = this
-			// let _articleList = _this.$refs._articleList
-			// if (_articleList.screen.hotTags) {
-			// 	_this.getPageByConditionFn(orderByField)
-			// 	return
-			// }
-			_this.$axios.get(_this.$API.hotTags).then(res=> {
-				// console.log(res)
+			let _articleList = _this.$refs._articleList
+			if (_articleList.screen.hotTags) {
+				_this.getPageByConditionFn(orderByField)
+				return
+			}
+			_this.$axios.get(_this.$API.hotTags).then((response) => {
+				let _data = response.data
+				// console.log(response.data);
+				
+				_data.length > 15 ? (_data.length = 15) : ''
+				_articleList.screen.hotTags = JSON.stringify(response.data)
+				if (!response.data.length) {
+					_articleList.screen.hotTags = ''
+				}
+				_this.getPageByConditionFn(orderByField)
 			})
 		},
-		
-		// 	const data = {
-		// 		url: '/hotTags/findHotTags',
-		// 		params: '',
-		// 		type: 'uc',
-		// 		call(response) {
-		// 			let _data = response.data
-		// 			_data.length > 15 ? (_data.length = 15) : ''
-		// 			_articleList.screen.hotTags = JSON.stringify(response.data)
-		// 			if (!response.data.length) {
-		// 				_articleList.screen.hotTags = ''
-		// 			}
-		// 			_this.getPageByConditionFn(orderByField)
-		// 		}
-		// 	}
-		// },
 		//todo 获取文章分页信息
 		getPageByCondition(orderByField) {
 			let _this = this
 			_this.findHotTags(orderByField)
 		},
 
-		getPageByConditionFn() {
+		// getRecommendArticleByCondition() {
+		// 	let _this = this
+		// 	let _articleList = _this.$refs._articleList
+		// 	_articleList.screen.media = null
+		// 	let params = {
+		// 		params: _articleList.screen
+		// 	}
+		// 	_this.axios.get(_this.$API.List, params).then((res) => {})
+		// },
+		getPageByConditionFn(orderByField = false) {
 			let _this = this
 			let _articleList = _this.$refs._articleList
+			let _url = _this.$API.PageByCondition
+			console.log(_this.$API.PageByCondition);
 			
-			// _articleList.screen.media = null;
+			if (_articleList.screen.media == 0 || !_articleList.screen.media) {
+				// 推荐资讯
+				_url = _this.$API.List
+				_articleList.screen.orderByField = ''
+				delete _articleList.screen['media']
+			} else {
+				if (!orderByField) {
+					_articleList.screen.orderByField = 'pubTime'
+				}
+			}
 			let params = {
 				params: _articleList.screen
 			}
-			_this.axios.get(_this.$API.List	,params).then(res => {
-				console.log(res)
-				let keyW = response.data.keywords
-				_articleList.articleData = response.data
-					_articleList.articleData.keywords = keyW
-						_articleList.articleListClassIs = true
+			_this.axios.get(_url, params).then((response) => {
+				let keyW = response.data.data.keywords
+				_articleList.articleData = response.data.data
+				// console.log(response.data.data.keywords)
+				_articleList.articleData.keywords = keyW
+				_articleList.articleListClassIs = true
 			})
 		}
-		// 	getPageByConditionFn(orderByField = false) {
-		// 	let _this = this
-		// 	let _articleList = _this.$refs._articleList
-		// 	let _url = '/spiderArticle/getArticlePageByCondition'
-		// 	console.log(_articleList.screen.media)
-		// 	// const _orderByField = _articleList.screen.orderByField;
-		// 	if (_articleList.screen.media == 0 || !_articleList.screen.media) {
-		// 		// 推荐资讯
-		// 		_url = '/spiderArticle/getRecommendArticleByCondition'
-		// 		_articleList.screen.orderByField = ''
-		// 		delete _articleList.screen['media']
-		// 	} else {
-		// 		if (!orderByField) {
-		// 			_articleList.screen.orderByField = 'pubTime'
-		// 		}
-		// 	}
-		// 	const data = {
-		// 		url: _url,
-		// 		params: _articleList.screen,
-		// 		loading: true,
-		// 		call(response) {
-		// 			if (response.data) {
-		// 				let keyW = response.data.keywords
-		// 				_articleList.articleData = response.data
-		// 				_articleList.articleData.keywords = keyW
-		// 				_articleList.articleListClassIs = true
-		// 			}
-		// 		}
-		// 	}
-		// 	_this.$store.state.global.axiosGet(data)
-		// }
 	},
 	mounted() {
-		this.getDataSpider()
-		this.getPageByConditionFn()
-		this.findHotTags()
 		let _this = this
 		let _articleList = _this.$refs._articleList
+		_this.findHotTags()
+		_this.getPageByConditionFn()
+		_this.getRecommendInformation()
+		_articleList.getArticleSelectList()	
 		let _global = _this.$store.state.global
 		_articleList.screen.orderByField = 'pubTime'
-		
 	},
-	created() {
-		
-	},
-		beforeRouteLeave(to, from, next) {
+	beforeRouteLeave(to, from, next) {
 		let position = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop
 		sessionStorage.setItem('scrollTop', position)
 		to.meta.keepAliveSerch = false
