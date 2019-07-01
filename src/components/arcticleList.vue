@@ -2,7 +2,7 @@
 	<div class="mainD ">
 		<slot name="recommend"></slot>
 		<div class="contMediaMapD" style="display: flex">
-			<div class="mediaMapD">
+			<div class="mediaMapD" v-if="queryNav.mediaMap">
 				<p class="mediaMapDFirst">大家都在看</p>
 				<!--<p @click="currentIndex(),mediaMapFn(key),$parent.getPageByConditionFn('all')">推荐资讯</p>-->
 				<p
@@ -179,7 +179,8 @@
 									>
 
 									<span><a :title="item.url" :href="item.url" target="_blank">原文链接</a></span>
-									<span v-if="item.score && item.score !== 'NaN'">相关度：{{ item.score | toFixed(2) }}%</span>
+									<span v-if="item.score && item.score !== 'NaN'">相关度：{{ item.score }}%</span>
+									<!-- | toFixed(2) -->
 								</el-col>
 							</div>
 						</div>
@@ -210,7 +211,7 @@
 </template>
 <script>
 import articleListClass from './articleListClass.vue'
-import filter from '../assets/filter/filter'
+import filter from '../assets/filter/filter.js'
 import img0 from '../assets/img/tuij.svg'
 import img1 from '../assets/img/xinw.svg'
 import img2 from '../assets/img/shej.svg'
@@ -430,7 +431,7 @@ export default {
 			// console.log(_this.screen.country)
 
 			_this.$axios.get(_this.$API.getArticle).then((res) => {
-				// console.log(res.data.data);
+				res.data.data.mediaMap['0'] = '推荐资讯'
 				_this.queryNav = res.data.data
 			})
 		},
@@ -446,6 +447,14 @@ export default {
 				.split(',')
 			return _val
 		},
+		mediaMapFn(key) {
+			let _this = this
+			_this.mediaMapIndex = key
+			_this.screen.media = key
+			_this.articleListClassIs = false
+			$('body,html').animate({ scrollTop: '0' }, 10)
+		},
+
 		getTopic() {
 			let _this = this
 			_this.$axios.get(_this.$API.getTopic).then((res) => {
@@ -539,6 +548,58 @@ export default {
 				_this.$store.state.global.axiosPost(dataSummary)
 			})
 		},
+		// todo 跳转详情页
+		goPageDetails(item, index) {
+			let _this = this
+			let _global = _this.$store.state.global
+			let _thematic = _this.$store.state.thematic
+
+			console.log(item.docId, 'item')
+
+			//todo 缓存当前文章列表，用于详情页文章加入专题
+			sessionStorage.setItem('curArticle', JSON.stringify(item))
+
+			_global.details = item
+			// _global.details.media = _this.screen.media;
+
+			_this.sessionStoreSet('docId', _global.details.docId)
+			_this.sessionStoreSet('keyId', _global.details.id)
+			_this.sessionStoreSet('media', _global.details.media)
+			_this.sessionStoreSet('mediaName', _this.queryNav.mediaMap[_this.screen.media] ? _this.queryNav.mediaMap[_this.screen.media] : '资讯')
+			_this.sessionStoreSet('keywordList', JSON.stringify(_global.details.keywords.split(',')))
+			_thematic.keywordsListArrSession = _global.details.keywordList
+
+			if (_this.$parent.$parent.listIsBool) {
+				_this.$parent.$parent.listIsBool(false)
+			}
+			// todo 页面缓存,手动添加阅读量
+			if (_thematic.topArrTypeSession == 'topic') {
+				//专题文章
+				if (!item.ufs) {
+					item.ufs = {}
+					item.ufs.readCount = 1
+				} else {
+					item.ufs.readCount++
+				}
+			} else {
+				// 资讯
+				if (!item.sfs) {
+					item.sfs = {}
+					item.sfs.readCount = 1
+				} else {
+					item.sfs.readCount++
+				}
+			}
+			_this.articleData.records.splice(index, 1, item)
+			if (_this.$parent.detIndexChild) {
+				sessionStorage.setItem('det', JSON.stringify(_this.$parent.detIndexChild))
+			}
+			window.location.href = `${_global.delUrl}?docId=${item.docId}&media=${item.media}`
+			/*_this.$router.push({
+                    name: _this.$parent.articleListChild.detailsPageName
+                    // name: 'details'
+                });*/
+		},
 		sessionStoreSet(name, val) {
 			let _thematic = this.$store.state.thematic
 			sessionStorage.setItem(name, val)
@@ -565,8 +626,8 @@ export default {
 	created() {},
 	mounted() {
 		let _this = this
-		console.log(_this.articleData.records);
-		
+		// console.log(_this.articleData);
+
 		_this.getArticleSelectList()
 		_this.getTopic()
 		// console.log(_this.articleData)

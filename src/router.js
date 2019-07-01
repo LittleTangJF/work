@@ -19,7 +19,13 @@ export default new Router({
           name: "list",
           component: () => import("./views/information/List"),
             // meta: { keepAlive: true }
-        }
+        },
+        {
+          path: "details",
+          name: "informationDetails",
+          // component: () => import('./views/information/details.vue')
+          component: () => import("./views/details.vue")
+        },
       ]
     }
   ]

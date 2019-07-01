@@ -10,15 +10,12 @@
 						</div>
 						<!-- 轮播图 -->
 						<div class="flex210 pl10">
-							<el-carousel height="150px" class>
-								<el-carousel-item v-for="(item, index) in recommendInfoArr" :key="index">
+							<el-carousel height="150px" class="carouselD">
+								<el-carousel-item v-for="(item, index) in recommendInfoArr['1']" :key="index">
 									<div class="posR" @click="delUrlSet(item)">
 										<a :href="$store.state.global.delUrl + '?docId=' + item.docId + '&media=' + item.media" target="_blank" class="fs875">
-											<img class="carouselImg" height="150px" :src="item.otherImages" alt />
-											<!-- | toImgOne -->
-											<p class="carouselMsg">
-												{{ item.title }}
-											</p>
+											<img class="carouselImg" height="150px" :src="item.otherImages | toImgOne" alt />
+											<p class="carouselMsg">{{ item.title }}</p>
 										</a>
 									</div>
 								</el-carousel-item>
@@ -28,7 +25,7 @@
 								<h1 class="borBE5 fs1d2 mbf10">热门资讯</h1>
 								<!--<h1 class="borBE5 fs1d2 mbf10" @click="getRecommendArticleByCondition">获取推荐资讯</h1>-->
 								<div class="recomInfoD">
-									<p class="textOver w217" @click="delUrlSet(item)" v-for="(item, index) in recommendInfoArr" :title="item.title" :key="index">
+									<p class="textOver w217" @click="delUrlSet(item)" v-for="(item, index) in recommendInfoArr['0']" :title="item.title" :key="index">
 										<a :href="$store.state.global.delUrl + '?docId=' + item.docId + '&media=' + item.media" target="_blank" class="fs875">
 											<span class="recomInfoDIndex">{{ index + 1 }}</span>
 											{{ item.title || item.summary }}
@@ -82,26 +79,39 @@ export default {
 	},
 	// props:[articleData],
 	// 设置过滤器
-
+	filters: {
+		toImgOne(value) {
+			if (!value) {
+				return value
+			}
+			let _val = value
+				.replace(/"/g, '')
+				.replace(/\[/g, '')
+				.replace(/\]/g, '')
+				.split(',')[0]
+			return _val
+		}
+	},
 	methods: {
 		// 获取轮播图数据
 		getRecommendInformation(type, size) {
 			let _this = this
-			let _recommendInfoSreen = _this.recommendInfoSreen
+			let _recommendInfoSreen = JSON.parse(JSON.stringify(_this.recommendInfoSreen))
 			_recommendInfoSreen.type = type
-			
+			// console.log(type, '000')
 			if (size) {
 				_recommendInfoSreen.size = size
 			}
 			let params = {
 				params: _recommendInfoSreen
 			}
-			_this.$axios.get(_this.$API.spiderArticle,params).then((res) => {
+			// console.log(params, '111')
+			_this.$axios.get(_this.$API.spiderArticle, params).then((res) => {
 				// console.log(res.data.data.records)
-				
-				_this.recommendInfoArr= res.data.data.records
-				
-			// console.log(_this._recommendInfoSreen);
+
+				_this.recommendInfoArr[`${type}`] = res.data.data.records
+
+				// console.log(_this.recommendInfoArr['1'])
 			})
 		},
 		// todo 查询用户感兴趣的行业热词 findHotTags
@@ -112,10 +122,10 @@ export default {
 				_this.getPageByConditionFn(orderByField)
 				return
 			}
-			_this.$axios.get(_this.$API.hotTags).then((response) => {
+			_this.$axios.get(_this.$API.hotTags, '').then((response) => {
 				let _data = response.data
-				// console.log(response.data);
-				
+				// console.log(_data);
+
 				_data.length > 15 ? (_data.length = 15) : ''
 				_articleList.screen.hotTags = JSON.stringify(response.data)
 				if (!response.data.length) {
@@ -129,25 +139,17 @@ export default {
 			let _this = this
 			_this.findHotTags(orderByField)
 		},
-
-		// getRecommendArticleByCondition() {
-		// 	let _this = this
-		// 	let _articleList = _this.$refs._articleList
-		// 	_articleList.screen.media = null
-		// 	let params = {
-		// 		params: _articleList.screen
-		// 	}
-		// 	_this.axios.get(_this.$API.List, params).then((res) => {})
-		// },
 		getPageByConditionFn(orderByField = false) {
 			let _this = this
 			let _articleList = _this.$refs._articleList
 			let _url = _this.$API.PageByCondition
-			console.log(_this.$API.PageByCondition);
-			
+			// console.log(_articleList.screen.media)
+
 			if (_articleList.screen.media == 0 || !_articleList.screen.media) {
 				// 推荐资讯
-				_url = _this.$API.List
+			 _url = _this.$API.List
+			 console.log(_this.$API.List);
+			 
 				_articleList.screen.orderByField = ''
 				delete _articleList.screen['media']
 			} else {
@@ -158,10 +160,12 @@ export default {
 			let params = {
 				params: _articleList.screen
 			}
+			// console.log(_articleList.screen);
+			
 			_this.axios.get(_url, params).then((response) => {
 				let keyW = response.data.data.keywords
 				_articleList.articleData = response.data.data
-				// console.log(response.data.data.keywords)
+				// console.log(response.data.data)	
 				_articleList.articleData.keywords = keyW
 				_articleList.articleListClassIs = true
 			})
@@ -169,11 +173,16 @@ export default {
 	},
 	mounted() {
 		let _this = this
+		console.log();
+		
 		let _articleList = _this.$refs._articleList
-		_this.findHotTags()
+		_this.getPageByCondition()
 		_this.getPageByConditionFn()
-		_this.getRecommendInformation()
-		_articleList.getArticleSelectList()	
+		_this.getRecommendInformation(0)
+		_this.getRecommendInformation(1, 5)
+		_this.getRecommendInformation(2)
+		// _this.getRecommendArticleByCondition()
+		_articleList.getArticleSelectList()
 		let _global = _this.$store.state.global
 		_articleList.screen.orderByField = 'pubTime'
 	},

@@ -3,7 +3,11 @@
   width: 1200px;
   margin: 0 auto;
 }
-
+@media screen and (max-width: 1200px) {
+  body .w1200{
+      width: 100%;
+  }
+}
 .flex1 {
   flex: 1;
 }
@@ -107,7 +111,10 @@
   top: 50%;
   transform: translateY(-50%);
 }
-
+/* 热门资讯 */
+.fs1d2{
+  font-size: 1.2rem;
+}
 /* 轮播图 */
 .flex210 {
   flex: 0 0 249px;
@@ -331,6 +338,24 @@
   color: #4889f3;
 }
 /* 文章目录图 */
+.flexW{
+  display: flex;
+  flex-wrap: wrap;
+}
+.wbhcFlex{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.wbhtFlex{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.hcFlex{
+  display: flex;
+  align-items: center;
+}
 .otherImagesWH{
   display: inline-block;
   width: 230px;
@@ -371,17 +396,17 @@
 .rOperate span a{
   font-size: .75rem;
   cursor: pointer;
-}
-.rOperate{
-  text-align: right;
+  text-decoration: none;
 }
 .rOperate span{
   font-size: .75rem;
   margin-right: 10px;
 }
-.rOperate span a{
-  font-size: .75rem;
-  cursor: pointer;
+.pl160{
+  padding-left: 160px;
+}
+.mtF20{
+  margin-top: -20px;
 }
 /* 下一页 */
 .pageD{
@@ -435,4 +460,93 @@
 .fs875{
   font-size: .875rem;
   text-decoration: none;
+}
+/* 文章信息 */
+.w100pre{
+  width: 100%;
+}
+.maxW100pre{
+  text-indent: 0rem;
+} 
+.maxW100pre img{
+  max-width: calc(60%);
+}
+.pl250{
+  padding-left: 250px;
+}
+/* 文章目录图 */
+.otherImagesWH{
+  display: inline-block;
+  width: 230px;
+  height: 120px;
+  background: url("../img/thematicDefault.png") 40% center no-repeat;
+}
+/* 详情页面
+ */
+ .minHbody{
+    min-height: calc(100vh - 71px);
+}
+.fs12{
+  font-size: .75rem;
+}
+.w75pre{
+  width: 75%;
+}
+.detCentD{
+  /*border: 1px solid #e5e5e5;*/
+  /*padding: 20px;*/
+  font-size: .75rem;
+}
+/* 详情页面内容 */
+.artDetTitle{
+  font-size: 1.5rem;
+  color: #222;
+  font-weight: 600;
+}
+.detCentTip.textR i:hover{
+  background-color: #006cba;
+  color: #ffffff;
+  transition: all .3s;
+}
+.detCentTip.textR i{
+  border-radius: 50px;
+  padding: 3px 10px;
+}
+.detCentTip{
+  margin-top: 10px;
+}
+.detCentTip span{
+  margin-right: 20px;
+}
+.detCentTip i{
+  color: #999;
+  background-color: #f0f0f0;
+  margin-right: 5px;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: .75rem;
+  cursor: pointer;
+}
+.detCentTip i:hover{
+  background-color: #e3f3fe;
+  color: #4889f3;
+} 
+.detCentTip.textR i{
+  cursor: pointer;
+  padding: 7px 10px;
+} 
+/* 不同资讯列表 */
+.cababab{
+  color: #ababab;
+}
+.artDetClassD .artlClass{
+  border-bottom: 1px dashed #ebeef5;
+  border-top: 1px dashed #ebeef5;
+  display: flex;
+  flex-wrap: wrap;
+}
+.artDetClassD .artlClass .el-col{
+  padding: 10px 0;
+  width: 50%;
+  border-bottom: 1px dashed #e5e5e5;
 }
